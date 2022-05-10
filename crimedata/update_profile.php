@@ -3,75 +3,95 @@ session_start();
 include "connection.php";
 $user_id =htmlspecialchars($_SESSION["user_id"]);
 $image_name =htmlspecialchars($_SESSION["image_name"]);
-if(isset($_POST['update_profile'])){
 
-   $update_first_name = mysqli_real_escape_string($conn, $_POST['update_first_name']);
-   $update_last_name = mysqli_real_escape_string($conn, $_POST['update_last_name']);
-   $update_position = mysqli_real_escape_string($conn, $_POST['update_position']);
-   $update_email = mysqli_real_escape_string($conn, $_POST['update_email']);
-   $update_image = mysqli_real_escape_string($conn, $_POST['update_image']);
+$res=mysqli_query ($conn,"SELECT * FROM `user` WHERE `user_id`= $user_id");
+while ($row=mysqli_fetch_array($res)) 
+{
+  $first_name=$row['first_name'];
+  $last_name=$row['last_name'];
+  $email=$row['email'];
+  $position=$row['position'];
+  $image_name=$row['image_name'];
+  $password=$row['password'];
+}
 
-   $chos= "UPDATE `user` SET first_name = '$update_first_name', last_name = '$update_last_name', position = '$update_position', email = '$update_email', image_name = '$update_image' WHERE user_id = '$user_id'";
-   mysqli_query($conn, $chos) or die('query failed');
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-   $old_pass = $_POST['old_pass'];
-   $update_pass = mysqli_real_escape_string($conn, md5($_POST['update_pass']));
-   $new_pass = mysqli_real_escape_string($conn, md5($_POST['new_pass']));
-   $confirm_pass = mysqli_real_escape_string($conn, md5($_POST['confirm_pass']));
+	// Check if first name is empty
+    if(empty(trim($_POST["update_first_name"]))){
+        $update_first_name_err = "Please enter first_name.";
+    } else{
+        $update_first_name = trim($_POST["update_first_name"]);
+    }
 
-   if(!empty($update_pass) || !empty($new_pass) || !empty($confirm_pass)){
-      if($update_pass != $old_pass){
-         $message[] = 'old password not matched!';
-      }elseif($new_pass != $confirm_pass){
-         $message[] = 'confirm password not matched!';
-      }else{
-         mysqli_query($conn, "UPDATE `user` SET password = '$confirm_pass' WHERE id = '$user_id'") or die('query failed');
-         $message[] = 'password updated successfully!';
-      }
-   }
+	//check if last name is empty
+	if(empty(trim($_POST["update_last_name"]))){
+        $update_last_name_err = "Please enter your last_name.";
+    } else{
+        $update_last_name = trim($_POST["update_last_name"]);
+    }
 
-   $update_image = $_FILES['update_image']['name'];
-   $update_image_size = $_FILES['update_image']['size'];
-   $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
-   $update_image_folder = 'uploaded_img/'.$update_image;
+	// check if email is empty
+	if(empty(trim($_POST["update_email"]))){
+        $update_email_err = "Please enter your email.";
+    } else{
+        $update_email = trim($_POST["update_email"]);
+    }
 
-   if (isset($_POST['submit'])) {
-      $file = $_FILES['file'];
-  
-      $fileName = $_FILES['file'] ['name'];
-      $fileTmpName = $_FILES['file'] ['tmp_name'];
-      $fileSize = $_FILES['file'] ['size'];
-      $fileError = $_FILES['file'] ['error'];
-      $fileType = $_FILES['file'] ['type'];
-  
-  
-      $fileExt = explode('.', $fileName);
-      $fileActualExt = strtolower(end($fileExt));
-  
-      $allowed = array('jpg', 'jpeg', 'png', 'pdf');
-   }
-      if (!empty($update_image)){
-         if (in_array($fileActualExt, $allowed)) {
-            if ($fileError === 0) {
-               if ($fileSize < 1000000) {
-                     $fileNameNew = $user_id.".".$fileActualExt;
-                     $fileDestination = 'uploads/'.$fileNameNew;
-                     move_uploaded_file($fileTmpName, $fileDestination);
-                     header("Location: index.php?uploadsucces");
-         
-               } else {
-                     echo "Your file is too big!";
-               }
-               
-            } else {
-               echo "There was an error uploading your file!";
+	// Check if password is empty
+    if(empty(trim($_POST["password"]))){
+        $password_err = "Please enter your password for confirmation.";
+    } else{
+        $password = trim($_POST["password"]);
+    }
+
+	if(empty($update_first_name_err) && empty($update_last_name_err) && empty($update_email_err) && empty($password_err)){
+        
+		$sql = "SELECT `user_id`, `password` FROM `user` WHERE `user_id`= ?";
+
+		if($stmt = mysqli_prepare($conn, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "s", $param_user_id);
+            
+            // Set parameters
+            $param_user_id = $user_id;
+            
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt)){
+                // Store result 
+                mysqli_stmt_store_result($stmt);
+                
+                // Check if username exists, if yes then verify password
+                if(mysqli_stmt_num_rows($stmt) == 1){                    
+                    // Bind result variables
+                    mysqli_stmt_bind_result($stmt, $user_id, $hashed_password);
+                    if(mysqli_stmt_fetch($stmt)){
+                        if(password_verify($password, $hashed_password)){
+
+							$check_user_id = $_POST["check_user_id"]
+							$sql1 = "UPDATE `user` SET `email`= $update_email ,`first_name`= $update_first_name ,`last_name`= update_last_name, WHERE `user_id`= $check_user_id ";
+							echo "WELL DONE!";
+
+							
+                        } else{
+                            // Password is not valid, display a generic error message
+                            $login_err = "Invalid input or Check for validation.";
+                        }
+                    }
+                } else{
+                    // Username doesn't exist, display a generic error message
+                    $login_err = "Invalid input or Check for validation.";
+                }
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
             }
-   
-         } else {
-            echo "You cannot upload files of this type!";
-         }
-      }
-  }
+
+            // Close statement
+            mysqli_stmt_close($stmt);
+        }
+
+	}
+}
 ?>
 <!DOCTYPE html>
 <head>
@@ -85,46 +105,72 @@ if(isset($_POST['update_profile'])){
 </head>
 <?php include("header.php"); ?>
 <body>
-   
-   <div class="update-profile">
-
-      <?php
-         $select = mysqli_query($conn, "SELECT * FROM `user` WHERE user_id =$user_id") or die('query failed');
-         if(mysqli_num_rows($select) > 0){
-            $fetch = mysqli_fetch_assoc($select);
-         }
-      ?>
-
-      <form action="" method="post" enctype="multipart/form-data">
-         <div class="flex">
-            <div class="inputBox">
-               <span>Firstname :</span>
-               <input type="text" name="update_first_name" value="<?php echo $fetch['first_name']; ?>" class="box">
-               <span>Lastname :</span>
-               <input type="text" name="update_last_name" value="<?php echo $fetch['last_name']; ?>" class="box">
-               <span>your email :</span>
-               <input type="email" name="update_email" value="<?php echo $fetch['email']; ?>" class="box">
-               <span>position :</span>
-               <input type="text" name="update_position" value="<?php echo $fetch['position']; ?>" class="box">
-               <span>update your pic :</span>
-               <input type="file" name="update_image" accept="image/jpg, image/jpeg, image/png" class="box">
-            </div>
-            <div class="inputBox">
-               <input type="hidden" name="old_pass" value="<?php echo $fetch['password']; ?>">
-               <span>old password :</span>
-               <input type="password" name="update_pass" placeholder="enter previous password" class="box">
-               <span>new password :</span>
-               <input type="password" name="new_pass" placeholder="enter new password" class="box">
-               <span>confirm password :</span>
-               <input type="password" name="confirm_pass" placeholder="confirm new password" class="box">
-            </div>
-         </div>
-         <input type="submit" value="update profile" name="update_profile" class="btn">
-         <a href="main.php" class="delete-btn">go back</a>
-      </form>
-
-   </div>
-
+	<div class="col-md-5" style="margin:auto;">
+		<div class="card mb-3 border-light">
+			<div class="card-body">
+				<div class="form-container">
+					<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
+						<div class="row mb-3">
+							<div class="col-sm-3">
+								<h6 class="mb-0">ID</h6>
+							</div>
+							<div class="col-sm-9 text-secondary">
+								<input type="text" class="form-control" value="<?php echo $user_id; ?>" disabled>
+								<input type="text" class="form-control" name="check_user_id" value="<?php echo $user_id; ?>" hidden>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-3">
+								<h6 class="mb-0">First Name</h6>
+							</div>
+							<div class="col-sm-9 text-secondary">
+								<input type="text" class="form-control" name="update_first_name" value="<?php echo $first_name; ?>">
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Last Name</h6>
+							</div>
+							<div class="col-sm-9 text-secondary">
+								<input type="text" class="form-control" name="update_last_name" value="<?php echo $last_name; ?>">
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Email</h6>
+							</div>
+							<div class="col-sm-9 text-secondary">
+								<input type="text" class="form-control" name="update_email" value="<?php echo $email; ?>">
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Position</h6>
+							</div>
+							<div class="col-sm-9 text-secondary">
+								<input type="text" class="form-control" value="<?php echo $position; ?>" disabled>
+							</div>
+						</div><br><br>
+						<div class="row mb-3">
+							<p>To confirm your changes, please input your password</p>
+							<div class="col-sm-3">
+								<h6 class="mb-0">Password</h6>
+							</div>
+							<div class="col-sm-9 text-secondary">
+								<input type="password" class="form-control" name="password" placeholder="Enter Password">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3"></div>
+							<div class="col-sm-9 text-secondary">
+								<input type="submit" class="btn btn-primary" value="Update">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+    </div>
 </body>
 <?php include("footer.php"); ?>
 </html>
