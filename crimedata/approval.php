@@ -1,5 +1,7 @@
 <?php
 include 'connection.php';
+session_start();
+$user_id=$_SESSION['user_id'];
 ?>
 <!DOCTYPE html>
 <head>
@@ -39,8 +41,8 @@ include 'connection.php';
               echo "<td>"; echo ucfirst($row["last_name"]);  echo "</td>";
               echo "<td>"; echo $row["position"];  echo "</td>";
               echo "<td>"; echo $row["email"];  echo "</td>";
-              echo "<td>"; ?> <a href="job_approve.php?id=<?php echo $row["user_id"]; ?>"><button type="button" class="btn btn-success">Approve</button></a> <?php  echo "</td>"; 
-              echo "<td>"; ?> <a href="job_delete.php?id=<?php echo $row["user_id"]; ?>" onClick='return confirm("Are you sure you want to delete?");'><button type="button" class="btn btn-danger">Delete</button></a> <?php  echo "</td>";
+              echo "<td>"; ?> <a href="register_approve.php?id=<?php echo $row["user_id"]; ?>"><button type="button" class="btn btn-success">Approve</button></a> <?php  echo "</td>"; 
+              echo "<td>"; ?> <a href="register_reject.php?id=<?php echo $row["user_id"]; ?>" onClick='return confirm("Are you sure you want to Reject?");'><button type="button" class="btn btn-danger">Reject</button></a> <?php  echo "</td>";
               echo "</tr>";
             }
             ?>

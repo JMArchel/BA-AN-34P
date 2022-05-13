@@ -1,23 +1,52 @@
 <?php
 // Initialize the session
 session_start();
-
+include 'connection.php';
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
 $position= ($_SESSION["position"]);
+$user_id= ($_SESSION["user_id"]);
 
-if(isset($_POST['submit']))
+if($_SERVER["REQUEST_METHOD"] == "POST")
 {
-		$handle = fopen($_FILES['filename']['tmp_name'], "r");
-		$headers = fgetcsv($handle, 1000, ",");
-		while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) 
-		{
-			$data[0];
-			$data[1];
+	$filename = $_FILES["choosefile"]["name"];
+	$tempname = $_FILES["choosefile"]["tmp_name"];  
+	$folder = "datafile/".$filename;
+	if (move_uploaded_file($tempname, $folder)) {
+		echo "placed. thanks";
+	}
+	$input = $folder;
+	$output = 'import.csv';
+
+	if (false !== ($ih = fopen($input, 'r'))) {
+		$oh = fopen($output, 'w');
+
+		while (false !== ($data = fgetcsv($ih))) {
+			$outputData = array($data[0], $data[1], $data[2], $data[7], $data[9], $data[10], $data[11], $data[13], $data[14], $data[41], $data[42], $data[43], $data[47]);
+			fputcsv($oh, $outputData);
+
 		}
+
+		$lines = file("import.csv", FILE_SKIP_EMPTY_LINES );
+		$num_rows = count($lines);
+		foreach ($lines as $lineNo => $line) {
+			$csv = str_getcsv($line);
+			if (empty($csv[0] && $csv[1] && $csv[2] && $csv[3] && $csv[4] && $csv[5] && $csv[6] && $csv[7] && $csv[8] && $csv[9] && $csv[10] && $csv[11] && $csv[12])) {
+				unset($lines[$lineNo]);
+			}
+		}
+		file_put_contents("import.csv", $lines);
+	}
+	
+	$file = fopen("import.csv", "r");
+	while (($row = fgetcsv($file)) !== FALSE) {
+		$stmt = $conn->prepare("INSERT INTO `cases`(`case_id`, `date`, `day`, `time`, `barangay_name`, `coordinate_x`, `coordinate_y`, `crime_type_name`, `category_name`, `classification_name`, `status_name`, `solve`, `clear`, `occurence_name`, `user_id`, `create_timestamp`) VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,$user_id,CURRENT_TIMESTAMP)");
+		$stmt->bind_param("sssssssssssss", $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12]);
+		$stmt->execute();
+	}
 }
 ?>
 
@@ -51,10 +80,10 @@ if(isset($_POST['submit']))
 								<p class="modal-title" id="exampleModalLabel">Place the file</p>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
-							<form action="" method="POST">
+							<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data"> 
 								<div class="modal-body">
 									<div class="input-group mb-3 ">
-										<input type='file' name='filename' class="form-control" accept=".csv" required> 
+										<input type='file' name="choosefile" class="form-control" accept=".csv" required> 
 									</div>
 								</div>
 								<div class="modal-footer">

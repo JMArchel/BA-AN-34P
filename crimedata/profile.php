@@ -47,10 +47,17 @@ mysqli_close($conn);
 		<div class="card mb-3 border-light">
 			<div class="card-body">
 				<?php 
-				$sql="SELECT * FROM `user` WHERE `position`='Supervisor'";
-				
+				if ($position == "Supervisor" OR $position == "Manager") { ?>
+					<a class="btn btn-secondary px-4" style="float: left;" href="approval.php">Approval</a>
+					<?php
+					if ($position == "Manager"){?>
+						<a class="btn btn-secondary px-4" style="float: right;" href="tracker.php">Tracker</a>
+					<?php
+					}?>
+				<?php
+				}
 				?>
-				<a class="btn btn-secondary px-4" style="margin-right:100px" href="approval.php">Approval</a>
+				
             	<div class="d-flex flex-column align-items-center text-center">
 					<img src="uploads/<?php echo $image_name; ?>" alt="owner" class="rounded-circle p-1 bg-warning" width="150" height="150" style="margin: 10px; object-fit: cover;">
 					<a class="btn btn-primary btn-sm" href="updateimage.php">Update Picture</a>
@@ -60,7 +67,7 @@ mysqli_close($conn);
 						<a class="btn btn-primary px-4" href="update_profile.php">Update Info</a>
 						<a class="btn btn-primary px-4" href="updatepass.php">Update Password</a>
 						</div>
-					</div>
+					</div><br>
           			<div class="row">
 						<div class="col-sm-3">
 							<h6 class="mb-0">User ID</h6>
