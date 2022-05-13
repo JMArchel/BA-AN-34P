@@ -1,5 +1,5 @@
 <?php
- $input = 'masterlist2020.csv';
+ $input = '$_POST["csvdata"]';
  $output = 'Masterlist2020 (2).csv';
 
  if (false !== ($ih = fopen($input, 'r'))) {

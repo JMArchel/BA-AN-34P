@@ -90,8 +90,46 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     </div>
                 </div>
             </div>
+        </div><br><br>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card h-100">
+                <div class="card-header text-center">Objectives</div>
+                <div class="card-body">
+                    <p class="card-text">The Data Crime Management System will enhance the crime recording operations and will be the basis for all actions in the sysem and can be easily updated and used to aid in all the system’s processes, that is, all the required information is stored. This will also assist our government leaders and law enforcement officers, especially in Dumaguete City in identifying patterns of criminal cases and raising awareness on the given types of criminal acts that most frequently occur in typologically similar parts of the community and to identifying the number of criminal cases in each community of Dumaguete City using an interactive webpage that contains data visualizations and crime analysis.  Another objective of the project is to establish a baseline analysis and formulate models that are suited to the system’s structure. Furthermore, the correctness of the centralized  database will allow functionssuch as crime report generation and statistical analysis of crime data.</p>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                <div class="card-header text-center">Scope and Limitations</div>
+                <div class="card-body">
+                    <p class="card-text">The main scope of the project is to develop a web-based crime data system that is easily accessible to users The scope of the project also includes crime data records for the last 3 years up to the recent. Through the system, proper safekeeping of data is provided and ensures data accuracy to generate crime data reports through the form of data visualization. Even though this project focuses on a crime data system, it doesn’t include confidential information such as the name, age, and gender of the perpetrators and victims. It also doesn’t include real-time data but near real-time data due to the main source being secondary. As a web-based system, it cannot be accessed without an internet connection.</p>
+                </div>
+                </div>
+            </div>
+        </div><br>
+        <div class="card mb-3 col-lg-7 border-light" style="margin: 0 auto;">
+            <div class="row g-0">
+                <div class="card-header text-center">Creators of the Project</div>
+                <div class="col-md-5">
+                <img src="img/friends.jpg" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-7">
+                <div class="card-body">
+                    <p class="card-text">
+                        · ANDRES, Shekinah<br>
+                        · AMIL, Derrick Thomas<br>
+                        · FELISILDA, Josemaria Archel<br>
+                        · GESLANI, Daniela<br>
+                        · LITUANAS, Eunice Mel<br>
+                        · SERILO, Nikka Marae Leonore</p>
+                </div>
+                </div>
+            </div>
         </div>
-    </div><br><br><br>
+    </div>
+    </div><br>
     <div class="row foot" style="padding:20px 50px 0px 30px">
         <div class="col-lg-9">
 			<h3><img src='img/logo5.svg' alt="logo" style="width: 300px;"></h3>

@@ -9,7 +9,7 @@
 			<li><a href="about_index.php">About</a></li>
 		</ul>
 	</nav>
-    <button onclick="location.href = 'update_profile';" type="button" class="btn btn-primary position-relative btn-sm" id="but">
+    <button onclick="location.href ='profile.php';" type="button" class="btn btn-primary position-relative btn-sm" id="but">
 		Profile <i class="bi bi-person-circle" style="font-size: 1rem; color: white;"></i>
 		<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
 		99+

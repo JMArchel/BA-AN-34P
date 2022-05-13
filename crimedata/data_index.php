@@ -8,6 +8,17 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 $position= ($_SESSION["position"]);
+
+if(isset($_POST['submit']))
+{
+		$handle = fopen($_FILES['filename']['tmp_name'], "r");
+		$headers = fgetcsv($handle, 1000, ",");
+		while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) 
+		{
+			$data[0];
+			$data[1];
+		}
+}
 ?>
 
 <html lang="en">
@@ -40,15 +51,15 @@ $position= ($_SESSION["position"]);
 								<p class="modal-title" id="exampleModalLabel">Place the file</p>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
-							<form action="cleanse.py" method="POST">
+							<form action="" method="POST">
 								<div class="modal-body">
 									<div class="input-group mb-3 ">
-										<input type="file" class="form-control" id="inputGroupFile02">
+										<input type='file' name='filename' class="form-control" accept=".csv" required> 
 									</div>
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-									<button type="button" name="add_data" class="btn btn-primary">Upload Data</button>
+									<button type="submit" name="submit" class="btn btn-primary">Upload Data</button>
 								</div>
 							</form>
 						</div>

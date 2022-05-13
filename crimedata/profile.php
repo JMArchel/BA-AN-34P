@@ -22,6 +22,7 @@ $image_name=$_SESSION['image_name'];
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/png" href="img/icon3.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <?php 
 $conn = mysqli_connect('localhost','root','','crimedata') or die('connection failed');
@@ -45,9 +46,13 @@ mysqli_close($conn);
 	<div class="col-md-5" style="margin:auto;">
 		<div class="card mb-3 border-light">
 			<div class="card-body">
+				<?php 
+				$sql="SELECT * FROM `user` WHERE `position`='Supervisor'";
+				
+				?>
 				<a class="btn btn-secondary px-4" style="margin-right:100px" href="approval.php">Approval</a>
             	<div class="d-flex flex-column align-items-center text-center">
-					<img src="uploads/<?php echo $image_name; ?>" alt="Admin" class="rounded-circle p-1 bg-warning" width="150" style="margin: 10px;">
+					<img src="uploads/<?php echo $image_name; ?>" alt="owner" class="rounded-circle p-1 bg-warning" width="150" height="150" style="margin: 10px; object-fit: cover;">
 					<a class="btn btn-primary btn-sm" href="updateimage.php">Update Picture</a>
 					<div class="mt-3">
 						<h4><?php echo $first_name," ",$last_name; ?></h4>
