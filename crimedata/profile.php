@@ -1,19 +1,31 @@
 <?php
+// Check if the user is logged in, if not then redirect him to login page
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 require("connection.php");
 session_start();
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: login.php");
+    exit;
+}
 $user_id=$_SESSION['user_id'];
 $first_name=ucfirst($_SESSION['first_name']);
 $last_name=ucfirst($_SESSION['last_name']);
 $email=$_SESSION['email'];
 $position=$_SESSION['position'];
 $image_name=$_SESSION['image_name'];
+if (!empty($_GET['id'])) {
+	$success=$_GET['id'];
+}
 ?>
  
 <!doctype html>
-<html lang="en">
+<html lang="en" 
+<?php if (!empty($_GET['id'])) {?>
+	style="padding-top:70px ;">
+<?php }
+?>
 <head>
 	<title>USER PROFILE</title>
     <meta charset="UTF-8">
@@ -47,6 +59,9 @@ mysqli_close($conn);
 		<div class="card mb-3 border-light">
 			<div class="card-body">
 				<?php 
+				if(!empty($success)){
+					echo '<div class="alert alert-success text-center">' . 'Successful Change' . '</div>';
+				}        
 				if ($position == "Supervisor" OR $position == "Manager") { ?>
 					<a class="btn btn-secondary px-4" style="float: left;" href="approval.php">Approval</a>
 					<?php

@@ -28,14 +28,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	// Check if first name is empty
     if(empty(trim($_POST["update_first_name"]))){
-        $update_first_name_err = "Please enter first_name.";
+        $update_first_name_err = "Please enter your firstname.";
     } else{
         $update_first_name = trim($_POST["update_first_name"]);
     }
 
 	//check if last name is empty
 	if(empty(trim($_POST["update_last_name"]))){
-        $update_last_name_err = "Please enter your last_name.";
+        $update_last_name_err = "Please enter your lastname.";
     } else{
         $update_last_name = trim($_POST["update_last_name"]);
     }
@@ -49,7 +49,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	// Check if password is empty
     if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter your password for confirmation.";
+        $password_err = "Please enter your password to confirm changes.";
     } else{
         $password = trim($_POST["password"]);
     }
@@ -107,16 +107,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 												session_start();
 													
 												// Store data in session variables
-												$_SESSION["loggedin"] = true;
-												$_SESSION["user_id"] = $user_id;
 												$_SESSION["first_name"] = $first_name;
 												$_SESSION["last_name"] = $last_name;
 												$_SESSION["email"] = $email;
-												$_SESSION["image_name"] = $image_name;
-												$_SESSION["position"] = $position;
 													
 												// Redirect user to welcome page
-												header("location: profile.php");
+												header("location: profile.php?id=success");
 											} else{
 												// Password is not valid, display a generic error message
 												$login_err = "Invalid input or Check for validation.";
@@ -134,7 +130,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 									mysqli_stmt_close($stmt);
 							}
 						} else {
-							echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+							$password_err="Invalid Password";
 						}
 							
                     } else{
@@ -225,7 +221,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 								<h6 class="mb-0">Password</h6>
 							</div>
 							<div class="col-sm-9 text-secondary">
-								<input type="password" class="form-control" name="password" placeholder="Enter Password">
+								<input type="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" name="password" placeholder="Enter Password">
+								<span class="invalid-feedback"><?php echo $password_err; ?></span>
 							</div>
 						</div>
 						<div class="row">
@@ -233,6 +230,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 							<div class="col-sm-2 text-secondary">
 								<input type="submit" class="btn btn-primary" value="Update" >
 							</div>
+						</div>
+						<div class="row">
+						<?php 
+                        if(!empty($login_err)){
+                            echo '<div class="alert alert-danger">' . $login_err . '</div>';
+                        }        
+                        ?>
 						</div>
 					</form>
 				</div>

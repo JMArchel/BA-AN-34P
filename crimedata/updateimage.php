@@ -1,6 +1,9 @@
 <?php
-
 session_start();
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+   header("location: login.php");
+   exit;
+ }
 include "connection.php";
 
 // Check if the user is logged in, if not then redirect him to login page
@@ -16,65 +19,70 @@ $msg = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
    
-   $filename = $_FILES["choosefile"]["name"];
+   if (empty($_FILES['choosefile']['type'])) {
+      $msg = "No file inputted";
+   }else{
+      $types=$_FILES[ 'choosefile' ][ 'type' ];     
+      $extensions=array( 'image/jpeg', 'image/png', 'image/gif', 'image/jpg' );
+      if( in_array( $types, $extensions )){
+      
+         $type= $_FILES["choosefile"]["type"];
+         $type= ltrim($type, 'image/');
+         $filename = $user_id.".".$type;
 
-   $tempname = $_FILES["choosefile"]["tmp_name"];  
+         $tempname = $_FILES["choosefile"]["tmp_name"];  
 
-   $folder = "uploads/".$filename;
+         $folder = "uploads/".$filename;
 
-   // query to insert the submitted data
+         // query to insert the submitted data
 
-   $sql="UPDATE `user` SET `update_timestamp`= CURRENT_TIMESTAMP ,`image_name`='$filename' WHERE `user_id`=$user_id";
+         $sql="UPDATE `user` SET `update_timestamp`= CURRENT_TIMESTAMP ,`image_name`='$filename' WHERE `user_id`=$user_id";
 
-   // function to execute above query
+         // function to execute above query
 
-   mysqli_query($conn, $sql);       
+         mysqli_query($conn, $sql);       
 
-   // Add the image to the "image" folder"
+         // Add the image to the "image" folder"
 
-   if (move_uploaded_file($tempname, $folder)) {
+         if (move_uploaded_file($tempname, $folder)) {
 
-      $sql1 = "SELECT `user_id`,`first_name`, `last_name`, `email`, `password`,`position` ,`image_name` FROM `user` WHERE `user_id`= ?";
-        
-			if($stmt = mysqli_prepare($conn, $sql1)){
-			// Bind variables to the prepared statement as parameters
-			   mysqli_stmt_bind_param($stmt, "s", $param_user_id);
-									
-				// Set parameters
-				$param_user_id = $user_id;
-									
-				// Attempt to execute the prepared statement
-				if(mysqli_stmt_execute($stmt)){
-					// Store result 
-					mysqli_stmt_store_result($stmt);
-										
-					// Check if username exists, if yes then verify password
-					if(mysqli_stmt_num_rows($stmt) == 1){                    
-					   // Bind result variables
-					   mysqli_stmt_bind_result($stmt, $user_id, $first_name, $last_name, $email, $hashed_password,$position ,$image_name);
-						if(mysqli_stmt_fetch($stmt)){
+            $sql1 = "SELECT `user_id`,`first_name`, `last_name`, `email`, `password`,`position` ,`image_name` FROM `user` WHERE `user_id`= ?";
+            echo $sql;
+            
+            if($stmt = mysqli_prepare($conn, $sql1)){
+            // Bind variables to the prepared statement as parameters
+               mysqli_stmt_bind_param($stmt, "s", $param_user_id);
+                                 
+               // Set parameters
+               $param_user_id = $user_id;
+                              
+               // Attempt to execute the prepared statement
+               if(mysqli_stmt_execute($stmt)){
+                  // Store result 
+                  mysqli_stmt_store_result($stmt);
+                                    
+                  // Check if username exists, if yes then verify password
+                  if(mysqli_stmt_num_rows($stmt) == 1){                    
+                     // Bind result variables
+                     mysqli_stmt_bind_result($stmt, $user_id, $first_name, $last_name, $email, $hashed_password,$position ,$image_name);
+                     if(mysqli_stmt_fetch($stmt)){
 
-							session_start();
-													
-							// Store data in session variables
-							$_SESSION["loggedin"] = true;
-							$_SESSION["user_id"] = $user_id;
-							$_SESSION["first_name"] = $first_name;
-							$_SESSION["last_name"] = $last_name;
-							$_SESSION["email"] = $email;
-							$_SESSION["image_name"] = $image_name;
-							$_SESSION["position"] = $position;
-										
-							// Redirect user to welcome page
-							header("location: profile.php");
+                        session_start();
+                                             
+                        // Store data in session variables
+                        $_SESSION["loggedin"] = true;
+                        $_SESSION["image_name"] = $image_name;
+                                    
+                        // Redirect user to welcome page
+                        header("location: profile.php?id=success");
+                     }
                   }
                }
             }
          }
-   }else{
-
-      $msg = "Failed to upload image";
-   
+      }else {
+         $msg = "Only jpeg, jpg, png, and gif are Accepted.";
+      }
    }
 }
 ?>
@@ -104,11 +112,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   <div class="col-lg-8" style="margin: auto;">
                   <h3>Update Profile Picture</h3><br>
                      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data"> 
-                        <input class="form-control" type="file" name="choosefile" required="required"><br>
-                        <input class="btn btn-primary" type="submit" value="Change Profile" name="submit">
+                        <input class="form-control" type="file" name="choosefile"><br>
+                        <input class="btn btn-primary" type="submit" value="Change Profile" name="submit"><br>
                      </form>
                   </div>
                </div>
+               <center><div class="col-lg-7">
+                  <?php 
+                     if(!empty($msg)){
+                         echo '<div class="alert alert-danger">' . $msg . '</div>';
+                     }        
+                  ?>
+               </div></center>
 				</div>
 			</div>
 		</div>

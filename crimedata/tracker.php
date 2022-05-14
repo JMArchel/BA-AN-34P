@@ -1,4 +1,9 @@
 <?php
+session_start();
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+  header("location: login.php");
+  exit;
+}
 include 'connection.php';
 ?>
 <!DOCTYPE html>
@@ -10,19 +15,19 @@ include 'connection.php';
    <link rel="icon" type="image/png" href="img/icon3.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-   <title>update profile</title>
+   <title>TRACKER • Dumaguete CDMS</title>
 </head>
 <?php include("header.php"); ?>
 <body>
 	<div class="col-md-7" style="margin:auto;">
 		<h3>Tracker</h3><br>
-        <table class="table table-bordered">
+        <table class="table" style="text-align: center;">
           <thead class="thead-dark">
-            <tr>
-              <th scope="col">Supervisor / Manager</th>
-              <th scope="col">Approved User</th>
-              <th scope="col">Accepted or Rejected</th>
-              <th scope="col">Timestamp</th>
+            <tr class="table-dark">
+              <th>Supervisor / Manager</th>
+              <th>Approved User</th>
+              <th>Accepted or Rejected</th>
+              <th>Timestamp</th>
             </tr>
           </thead>
           <tbody>
@@ -33,8 +38,8 @@ include 'connection.php';
             while ($row=mysqli_fetch_array($res))
             {
               echo "<tr>";
-              echo "<td>"; echo ucfirst($row["supervisor"]);  echo "</td>";
-              echo "<td>"; echo ucfirst($row["username"]);  echo "</td>";
+              echo "<td>"; echo ucwords($row["supervisor"]);  echo "</td>";
+              echo "<td>"; echo ucwords($row["username"]);  echo "</td>";
               echo "<td>"; echo $row["approval_name"];  echo "</td>";
               echo "<td>"; echo $row["approve_reject_timestamp"];  echo "</td>";
               echo "</tr>";

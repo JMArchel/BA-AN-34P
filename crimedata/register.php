@@ -1,5 +1,4 @@
 <?php
-
 include 'connection.php';
 
 $first_name = $last_name = $email = $position = $password = $confirm_password ="";

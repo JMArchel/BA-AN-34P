@@ -28,7 +28,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check if password is empty
     if(empty(trim($_POST["password"]))){
         $password_err = "Please enter your password.";
-    } else{
+    }elseif(strlen(trim($_POST["password"])) < 8){
+        $password_err = "Password must have atleast 8 characters."; 
+    }else{
         $password = trim($_POST["password"]);
     }
     
@@ -71,15 +73,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             header("location: main.php");
                         } else{
                             // Password is not valid, display a generic error message
-                            $login_err = "Invalid input or Check for validation.";
+                            $login_err = "Invalid Passwprd";
                         }
                     }
                 } else{
                     // Username doesn't exist, display a generic error message
-                    $login_err = "Invalid input or Check for validation.";
+                    $login_err = "Invalid ID.";
                 }
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                $login_err = "Oops! Something went wrong. Please try again later.";
             }
 
             // Close statement
@@ -114,7 +116,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
                         <h3>login now</h3>
                         <div class="form-group">
-                            <label>ID</label>
+                            <label>User ID</label>
                             <input type="text" name="user_id" class="form-control <?php echo (!empty($user_id_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $user_id; ?>" placeholder="Enter ID">
                             <span class="invalid-feedback"><?php echo $user_id_err; ?></span>
                         </div>    

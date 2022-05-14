@@ -114,7 +114,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 							<th>Clear</th>
 							<th>Occurence</th>
 							<th>Username</th>
-							<th>Created</th>
+							<th>Imported</th>
 						</tr>
 					</thead>
 			

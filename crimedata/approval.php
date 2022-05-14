@@ -1,7 +1,18 @@
 <?php
 include 'connection.php';
 session_start();
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+  header("location: login.php");
+  exit;
+}
 $user_id=$_SESSION['user_id'];
+if (!empty($_GET['check'])) {
+  if ($_GET['check']=='approve') {
+    $success=$_GET['check'];
+  }elseif($_GET['check']=='reject'){
+    $reject=$_GET['check'];
+  }
+}
 ?>
 <!DOCTYPE html>
 <head>
@@ -12,21 +23,28 @@ $user_id=$_SESSION['user_id'];
    <link rel="icon" type="image/png" href="img/icon3.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-   <title>update profile</title>
+   <title>APPROVAL • Dumaguete CDMS</title>
 </head>
 <?php include("header.php"); ?>
 <body>
 	<div class="col-md-7" style="margin:auto;">
+  <?php 
+    if(!empty($success)){
+      echo '<div class="alert alert-success text-center">' . 'Approved' . '</div>';
+    }elseif(!empty($reject)){
+      echo '<div class="alert alert-danger text-center">' . 'Rejected' . '</div>';
+    }   
+  ?>
 		<h3>Approval</h3><br>
-        <table class="table table-bordered">
+        <table class="table" style='text-align: center;'>
           <thead class="thead-dark">
-            <tr>
-              <th scope="col">User ID</th>
-              <th scope="col">First Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Position</th>
-              <th scope="col">Email</th>
-              <th scope="col" colspan="2">Action</th>
+            <tr class='table-dark'>
+              <th>User ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Position</th>
+              <th>Email</th>
+              <th colspan="2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -41,8 +59,19 @@ $user_id=$_SESSION['user_id'];
               echo "<td>"; echo ucfirst($row["last_name"]);  echo "</td>";
               echo "<td>"; echo $row["position"];  echo "</td>";
               echo "<td>"; echo $row["email"];  echo "</td>";
-              echo "<td>"; ?> <a href="register_approve.php?id=<?php echo $row["user_id"]; ?>"><button type="button" class="btn btn-success">Approve</button></a> <?php  echo "</td>"; 
-              echo "<td>"; ?> <a href="register_reject.php?id=<?php echo $row["user_id"]; ?>" onClick='return confirm("Are you sure you want to Reject?");'><button type="button" class="btn btn-danger">Reject</button></a> <?php  echo "</td>";
+              echo "<td>"; ?> <a href="register_approve.php?id=<?php echo $row["user_id"]; ?>"><button type="button" class="btn btn-success btn-sm">
+                Approve
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                  <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                </svg>    
+                </button></a> <?php  echo "</td>"; 
+              echo "<td>"; ?> <a href="register_reject.php?id=<?php echo $row["user_id"]; ?>" onClick='return confirm("Are you sure you want to Reject?");'><button type="button" class="btn btn-danger btn-sm">
+                Reject
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-x-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
+                </svg>
+                </button></a> <?php  echo "</td>";
               echo "</tr>";
             }
             ?>
