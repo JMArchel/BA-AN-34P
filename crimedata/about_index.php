@@ -7,6 +7,20 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $email= $_SESSION['email'];
+    $name=$_SESSION['first_name'];
+    $message =$_POST['message'];
+
+    
+    $mailheader = "From:".$name."<".$email.">\r\n";
+$subject="Inquiry";
+$recipient = "inquiry@crimedata.mydatamarker.com";
+
+mail($recipient,$subject, $message)
+or die("Error");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +52,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Steps in Importing Data
+                    What are the contents of this system?
                 </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -137,9 +151,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		</div>
         <div class="col-lg-1"><p>Have more questions?</p><h4 style="padding-top:8px; font-size:20px">Contact Us</h4></div>
 		<div class="col-lg-2">
-            <form>
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
                 <div class="mb-3">
                     <input type="email" class="form-control input-sm" placeholder="<?php echo htmlspecialchars($_SESSION["email"]); ?>" disabled>
+                    <input type="email" class="form-control input-sm" placeholder="<?php echo htmlspecialchars($_SESSION["email"]); ?>" hidden>
+                    <input type="name" class="form-control input-sm" placeholder="<?php echo ($_SESSION["first_name"])," ", ($_SESSION["last_name"]); ?>" hidden>
                 </div>
                 <div class="mb-3">
                     <textarea name="message" class="form-control input-sm" placeholder="Message" rows="2"></textarea>

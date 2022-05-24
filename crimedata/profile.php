@@ -1,8 +1,5 @@
 <?php
 // Check if the user is logged in, if not then redirect him to login page
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
 require("connection.php");
 session_start();
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
@@ -15,6 +12,7 @@ $last_name=ucfirst($_SESSION['last_name']);
 $email=$_SESSION['email'];
 $position=$_SESSION['position'];
 $image_name=$_SESSION['image_name'];
+
 if (!empty($_GET['id'])) {
 	$success=$_GET['id'];
 }
@@ -37,7 +35,6 @@ if (!empty($_GET['id'])) {
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <?php 
-$conn = mysqli_connect('localhost','root','','crimedata') or die('connection failed');
 // Check connection
 if (mysqli_connect_errno())
 {

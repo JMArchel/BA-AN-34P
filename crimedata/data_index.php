@@ -15,17 +15,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	$filename = $_FILES["choosefile"]["name"];
 	$tempname = $_FILES["choosefile"]["tmp_name"];  
 	$folder = "datafile/".$filename;
-	if (move_uploaded_file($tempname, $folder)) {
-		echo "placed. thanks";
-	}
+	move_uploaded_file($tempname, $folder) ;
 	$input = $folder;
 	$output = 'import.csv';
 
 	if (false !== ($ih = fopen($input, 'r'))) {
 		$oh = fopen($output, 'w');
+		$count=0;
 
-		while (false !== ($data = fgetcsv($ih))) {
+		while (false !== ($data = fgetcsv($ih, 0, ","))) {
 			$outputData = array($data[0], $data[1], $data[2], $data[7], $data[9], $data[10], $data[11], $data[13], $data[14], $data[41], $data[42], $data[43], $data[47]);
+			$count++;
+			if ($count == 1) { continue; }
 			fputcsv($oh, $outputData);
 
 		}
@@ -41,9 +42,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		file_put_contents("import.csv", $lines);
 	}
 	
+	$rows = file("import.csv");    
+	$blacklist = "#REF!";
+
+	foreach($rows as $key => $row) {
+    if(preg_match("/($blacklist)/", $row)) {
+        unset($rows[$key]);
+    }
+}
+
+	file_put_contents("import.csv", implode("\n", $rows));
+	
 	$file = fopen("import.csv", "r");
 	while (($row = fgetcsv($file)) !== FALSE) {
-		$stmt = $conn->prepare("INSERT INTO `cases`(`case_id`, `date`, `day`, `time`, `barangay_name`, `coordinate_x`, `coordinate_y`, `crime_type_name`, `category_name`, `classification_name`, `status_name`, `solve`, `clear`, `occurence_name`, `user_id`, `create_timestamp`) VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,$user_id,CURRENT_TIMESTAMP)");
+		$stmt = $conn->prepare("INSERT INTO `cases`(`case_id`, `date`, `day`, `time`, `barangay_name`, `coordinate_x`, `coordinate_y`, `crime_type_name`, `category_name`, `classification_name`, `status_name`, `solve`, `clear`, `occurence_name`, `user_id`, `create_timestamp`) VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,$user_id,CONVERT_TZ(CURRENT_TIMESTAMP,'+00:00','+08:00'))");
 		$stmt->bind_param("sssssssssssss", $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12]);
 		$stmt->execute();
 	}

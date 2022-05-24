@@ -1,4 +1,5 @@
-<?php include 'connection.php';?>
+<?php include 'connection.php';
+$position=$_SESSION["position"]; ?>
 <header>
 	<a href="main.php"><img class="logo" src="img/logo5.svg" style="width: 200px;" alt="logo"></a>
 	<nav style="padding-right:140px;">
@@ -12,14 +13,16 @@
 	</nav>
     <button onclick="location.href ='profile.php';" type="button" class="btn btn-primary position-relative btn-sm" id="but">
 		Profile <i class="bi bi-person-circle" style="font-size: 1rem; color: white;"></i>
-		<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-		<?php $res=mysqli_query($conn,"SELECT COUNT(user_id) AS numbers FROM `user` WHERE `approval`=0");
-            if ($res->num_rows > 0) {
-				while($row = $res->fetch_assoc()) {
-				echo $row["numbers"];
-				}
-		}?>
-
+		<?Php if ($position=="Manager" OR $position=="Supervisor")
+		{ ?>
+    		<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    		<?php $res=mysqli_query($conn,"SELECT COUNT(user_id) AS numbers FROM `user` WHERE `approval`=0");
+                if ($res->num_rows > 0) {
+    				while($row = $res->fetch_assoc()) {
+    				echo $row["numbers"];
+    				}
+    		}
+    	} ?>
 		</span>
 	</button>
 </header>
