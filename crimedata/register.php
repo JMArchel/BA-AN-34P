@@ -1,6 +1,12 @@
 <?php
 include 'connection.php';
 
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+    header("location: main");
+    exit;
+}
+
 $first_name = $last_name = $email = $position = $password = $confirm_password ="";
 $first_name_err = $last_name_err = $email_err = $position_err = $password_err = $confirm_password_err ="";
 $check = "";
@@ -34,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($_POST["email"])){
         $email_err = "Please enter your email.";
     }elseif(mysqli_num_rows($select) > 0){
-        $email_err = 'Email also exist.';
+        $email_err = 'Email already exist.';
     }elseif(mysqli_num_rows($email_check) > 0){
         $email_err = 'Email already exist.';
     }else{
@@ -50,7 +56,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate password
     if(empty(trim($_POST["password"]))){
         $password_err = "Please enter a password.";     
-    } elseif(strlen(trim($_POST["password"])) < 8){
+    } elseif(strlen(trim($_POST["password"])) > 8){
         $password_err = "Password must have atleast 8 characters.";
     } else{
         $password = trim($_POST["password"]);
@@ -86,7 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Redirect to login page
-                header("location: waiting.php");
+                header("location: waiting");
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
             }
@@ -103,73 +109,73 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <html lang="en">
 <head>
 	<title>REGISTER • Dumaguete CDMS</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="img/icon3.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Vollkorn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
 </head>
-<body style="background: url(img/backgroundimage.png);">
+<body class="body">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-3">
+            <div class="col-4">
                 <?php echo "&nbsp&nbsp&nbsp" ?><br><?php echo "&nbsp&nbsp&nbsp" ?><br>
             </div>
-            <div class="col-6 fillup">
-                <div class="form-container">
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
-                        <h3>Sign Up</h3>
-                        <p>Please fill this form to create an account.</p>
-                        <div class="row g-3">
-                            <div class="form-group col-md-6">
-                                <label>Firstname</label>
-                                <input type="text" name="first_name" class="form-control <?php echo (!empty($first_name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $first_name; ?>" placeholder="Enter Firstname">
-                                <span class="invalid-feedback"><?php echo $first_name_err; ?></span>
-                            </div>    
-                            <div class="form-group col-md-6">
-                                <label>Lastname</label>
-                                <input type="text" name="last_name" class="form-control <?php echo (!empty($last_name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $last_name; ?>" placeholder="Enter Lastname">
-                                <span class="invalid-feedback"><?php echo $last_name_err; ?></span>
-                            </div>
-                            <div class="form-group col-8">
-                                <label>Email</label>
-                                <input type="email" name="email" class="form-control <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>" placeholder="Enter Email">
-                                <span class="invalid-feedback"><?php echo $email_err; ?></span>
-                            </div>
-                            <div class="col-4">
-                                <label>Position</label>
-                                <select name="position" class="form-group form-control <?php echo (!empty($position_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $position; ?>">
-                                    <option selected disabled value=" ">Choose Position</option>
-                                    <option value="Member">Member</option>
-                                    <option value="Supervisor">Supervisor</option>
-                                    <option value="Manager">Manager</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Please select a valid state.
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Password</label>
-                                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
-                                <span class="invalid-feedback"><?php echo $password_err; ?></span>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Confirm Password</label>
-                                <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
-                                <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
+            <div class="col-4 fillup form-container">
+                <h3>Sign Up</h3>
+                <p>Please fill this form to create an account.</p>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Firstname</label>
+                            <input type="text" name="first_name" class="form-control <?php echo (!empty($first_name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $first_name; ?>" placeholder="Enter firstname">
+                            <span class="invalid-feedback"><?php echo $first_name_err; ?></span>
+                        </div>    
+                        <div class="form-group col-md-6">
+                            <label>Lastname</label>
+                            <input type="text" name="last_name" class="form-control <?php echo (!empty($last_name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $last_name; ?>" placeholder="Enter lastname">
+                            <span class="invalid-feedback"><?php echo $last_name_err; ?></span>
+                        </div>
+                        <div class="form-group col-8">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>" placeholder="Enter email address">
+                            <span class="invalid-feedback"><?php echo $email_err; ?></span>
+                        </div>
+                        <div class="col-4">
+                            <label>Position</label>
+                            <select name="position" class="form-group form-control <?php echo (!empty($position_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $position; ?>">
+                                <option selected disabled value=" ">Choose Position</option>
+                                <option value="Member">Member</option>
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Manager">Manager</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a valid state.
                             </div>
                         </div>
-                        <div><?php echo "&nbsp&nbsp&nbsp" ?></div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="submit">
-                            <input type="reset" class="btn btn-secondary ml-2" value="reset">
+                        <div class="form-group col-md-6">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>" placeholder="Enter password">
+                            <span class="invalid-feedback"><?php echo $password_err; ?></span>
                         </div>
-                        <p class="sl">Already have an account? <a href="login.php">Login here</a>.</p>
-                    </form>
-                </div>
+                        <div class="form-group col-md-6">
+                            <label>Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>" placeholder="Confirm password">
+                            <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
+                        </div>
+                    </div>
+                    <div><?php echo "&nbsp&nbsp&nbsp" ?></div>
+                    <div class="form-group">
+                        <input type="submit" class="form-control btn btn-primary" value="submit">
+                    </div>
+                    <p class="sl">Already have an account? <a href="login">Login here</a>.</p>
+                </form>
             </div>
-            <div class="col-3">
+            <div class="col-4">
                 <?php echo "&nbsp&nbsp&nbsp" ?><br><?php echo "&nbsp&nbsp&nbsp" ?><br>
             </div>
         </div>

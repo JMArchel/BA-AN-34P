@@ -13,16 +13,16 @@ $res=mysqli_query($conn,"SELECT `user_id`, `email`, `first_name`, `last_name`, `
 while ($row=mysqli_fetch_array($res))
 {
     $user_idd=$row["user_id"];
-    $recipient=$row["email"];
+    $to=$row["email"];
     $fname=$row["first_name"];
     $lname=$row["last_name"];
 }
 $name= $fname. " " .$lname;
 $mailheader = "From:".$name;
-$denied_text="Denied";
-$message="Your Registration has been Rejected," .$name;
-
-mail($recipient, $denied_text, $message) or die("Error");
+$subject="Rejected";
+$message="Your Registration has been Rejected.";
+$header= "From:crimedata <confirmation@crimedata.mydatamarker.com>\r\n";
+mail($to,$subject,$message,$header) or die("Error");
 ?>
 <script type="text/javascript">
 window.location="approval.php?check=reject";

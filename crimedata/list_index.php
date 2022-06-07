@@ -18,141 +18,58 @@ include_once("connection.php");
 <head>
 	<title>LIST • Dumaguete CDMS</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="img/icon3.png">
+    <link rel="icon" type="image/png" href="img/icon3.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Vollkorn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <?php include("header.php"); ?>
 <body>
-  <div class="border-end sidebar col-lg-2" style="background-color:#1b1e2a;">
-    <div class="border-bottom" style="color:white;padding-top:20px;"><h4>List Tab</4></div><br>
+    <h3 align="center">List Collection</h3>
+  <center><button class="btn btn-success btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">LIst Tab</button></center>
+
+  <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="background-color:#0F3465;">
+    <div class="offcanvas-header">
+      <a href="main.php"><img class="logo" src="img/logo5.svg" style="width: 200px;" alt="logo"></a>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <h4 class="offcanvas-title border-bottom" id="offcanvasWithBothOptionsLabel" style="margin:1em 0em 2em 0em;">List Tab</h4>
       <div class="list-group list-group-flush" style="padding: 0px 30px 0px 30px">
         <input type="checkbox" class="btn-check" id="BoxName1" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName1">Barangay</label><br>
+        <label class="btn btn-light" for="BoxName1">Barangay</label><br>
 
         <input type="checkbox" class="btn-check" id="BoxName2" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName2">Crime Type</label><br>
+        <label class="btn btn-light" for="BoxName2">Crime Type</label><br>
 
         <input type="checkbox" class="btn-check" id="BoxName3" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName3">Category</label><br>
-          
+        <label class="btn btn-light" for="BoxName3">Category</label><br>
+            
         <input type="checkbox" class="btn-check" id="BoxName4" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName4">Classification</label><br>
+        <label class="btn btn-light" for="BoxName4">Classification</label><br>
 
         <input type="checkbox" class="btn-check" id="BoxName5" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName5">Status</label><br>
-          
+        <label class="btn btn-light" for="BoxName5">Status</label><br>
+            
         <input type="checkbox" class="btn-check" id="BoxName6" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName6">Solve</label><br>
+        <label class="btn btn-light" for="BoxName6">Solve</label><br>
 
         <input type="checkbox" class="btn-check" id="BoxName7" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName7">Clear</label><br>
+        <label class="btn btn-light" for="BoxName7">Clear</label><br>
           
         <input type="checkbox" class="btn-check" id="BoxName8" autocomplete="off" onclick="ShowCheckboxDiv('BoxName', 8)"/>
-        <label class="btn btn-primary" for="BoxName8">Occurence</label>
+        <label class="btn btn-light" for="BoxName8">Occurence</label>
       </div>
     </div>
   </div>
-  <center><div class="col-lg-6">
-    <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="brng/bagacay-01.svg" class="d-block w-100 rounded-3" alt="bagacay">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/bajumpandan-01.svg" class="d-block w-100 rounded-3" alt="bajumpandan">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/balugo-01.svg" class="d-block w-100 rounded-3" alt="balugo">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/banilad-01.svg" class="d-block w-100 rounded-3" alt="banilad">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/bantayan-01.svg" class="d-block w-100 rounded-3" alt="bantayan">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/batinguel-01.svg" class="d-block w-100 rounded-3" alt="batinguel">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/bunao-01.svg" class="d-block w-100 rounded-3" alt="bunao">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/cadawinonan-01.svg" class="d-block w-100 rounded-3" alt="cadawinonan">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/calindagan-01.svg" class="d-block w-100 rounded-3" alt="calindagan">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/camanjac-01.svg" class="d-block w-100 rounded-3" alt="camanjac">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/candauay-01.svg" class="d-block w-100 rounded-3" alt="candauay">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/cantile-01.svg" class="d-block w-100 rounded-3" alt="cantile">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/daro-01.svg" class="d-block w-100 rounded-3" alt="daro">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/junob-01.svg" class="d-block w-100 rounded-3" alt="junob">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/looc-01.svg" class="d-block w-100 rounded-3" alt="looc">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/magnao-01.svg" class="d-block w-100 rounded-3" alt="mangnao">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/motong-01.svg" class="d-block w-100 rounded-3" alt="motong">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/piapi-01.svg" class="d-block w-100 rounded-3" alt="piapi">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion1-01.svg" class="d-block w-100 rounded-3" alt="poblacion1">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion2-01.svg" class="d-block w-100 rounded-3" alt="poblacion2">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion3-01.svg" class="d-block w-100 rounded-3" alt="poblacion3">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion4-01.svg" class="d-block w-100 rounded-3" alt="poblacion4">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion5-01.svg" class="d-block w-100 rounded-3" alt="poblacion5">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion6-01.svg" class="d-block w-100 rounded-3" alt="poblacion6">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion7-01.svg" class="d-block w-100 rounded-3" alt="poblacion7">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/poblacion8-01.svg" class="d-block w-100 rounded-3" alt="poblacion8">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/pulantubig-01.svg" class="d-block w-100 rounded-3" alt="pulantubig">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/tabuctubig-01.svg" class="d-block w-100 rounded-3" alt="tabuctubig">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/taclobo-01.svg" class="d-block w-100 rounded-3" alt="taclobo">
-        </div>
-        <div class="carousel-item">
-          <img src="brng/talay-01.svg" class="d-block w-100 rounded-3" alt="talay">
-        </div>
-      </div>
-    </div>
 
-      <div ID="BoxName1Div" STYLE="display:none;">
+  <center><div class="col-lg-7">
+
+      <div ID="BoxName1Div" STYLE="display:block;">
         <ul class="list-group">
           <li class="list-group-item bg-danger d-flex justify-content-between align-items-center" style="color: white;">
             Barangay<span class='badge rounded-pill'>COUNT</span>
@@ -287,7 +204,7 @@ include_once("connection.php");
             }
           ?>
         </ul>
-      </div>
+      </div><br><br>
     </div></center>
   </div>
 </div>

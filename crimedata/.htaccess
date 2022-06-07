@@ -1,0 +1,24 @@
+DirectoryIndex login.php main.php
+RewriteEngine On
+RewriteRule ^login$ login.php
+RewriteRule ^register$ register.php
+RewriteRule ^main$ main.php
+RewriteRule ^about$ about_index.php
+RewriteRule ^approval$ approval.php
+RewriteRule ^data$ data_index.php
+RewriteRule ^forgot-password$ forgot-password.php
+RewriteRule ^list$ list_index.php
+RewriteRule ^new-password$ new-password.php
+RewriteRule ^profile$ profile.php
+RewriteRule ^reset-code$ reset-code.php
+RewriteRule ^tracker$ tracker.php
+RewriteRule ^update-profile$ update_profile.php
+RewriteRule ^update-image$ updateimage.php
+RewriteRule ^update-password$ updatepass.php
+RewriteRule ^visualization-1$ visualization_index.php
+RewriteRule ^visualization-2$ visualization_index2.php
+RewriteRule ^visualization-3$ visualization_index_index3.php
+RewriteRule ^visualization-4$ visualization_index4.php
+RewriteRule ^visualization-5$ visualization_index5.php
+RewriteRule ^visualization-6$ visualization_index6.php
+RewriteRule ^waiting$ waiting.php

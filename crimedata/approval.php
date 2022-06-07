@@ -16,18 +16,20 @@ if (!empty($_GET['check'])) {
 ?>
 <!DOCTYPE html>
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="style.css">
-   <link rel="icon" type="image/png" href="img/icon3.png">
+    <title>APPROVAL • Dumaguete CDMS</title>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="img/icon3.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-   <title>APPROVAL • Dumaguete CDMS</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Vollkorn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <?php include("header.php"); ?>
 <body>
-	<div class="col-md-7" style="margin:auto;">
+	<div class="col-md-9" style="margin:auto;">
   <?php 
     if(!empty($success)){
       echo '<div class="alert alert-success text-center">' . 'Approved' . '</div>';
@@ -35,13 +37,12 @@ if (!empty($_GET['check'])) {
       echo '<div class="alert alert-danger text-center">' . 'Rejected' . '</div>';
     }   
   ?>
-		<h3>Approval</h3><br>
-        <table class="table" style='text-align: center;'>
+		<h3 class="text-center">Approval</h3><br>
+        <table class="table table-striped" style='text-align: center; background-color: white;'>
           <thead class="thead-dark">
             <tr class='table-dark'>
               <th>User ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Full Name</th>
               <th>Position</th>
               <th>Email</th>
               <th colspan="2">Action</th>
@@ -55,8 +56,7 @@ if (!empty($_GET['check'])) {
             {
               echo "<tr>";
               echo "<td>"; echo $row["user_id"];  echo "</td>";
-              echo "<td>"; echo ucfirst($row["first_name"]);  echo "</td>";
-              echo "<td>"; echo ucfirst($row["last_name"]);  echo "</td>";
+              echo "<td>"; echo '<strong>' . ucfirst($row["last_name"]); echo '</strong>, ' .ucfirst($row["first_name"]);  echo "</td>";
               echo "<td>"; echo $row["position"];  echo "</td>";
               echo "<td>"; echo $row["email"];  echo "</td>";
               echo "<td>"; ?> <a href="register_approve.php?id=<?php echo $row["user_id"]; ?>"><button type="button" class="btn btn-success btn-sm">
