@@ -9,11 +9,13 @@
   exit;
   }
   $year="";
+  $year1="";
 
   $checkyear = $conn->query("SELECT year(date) from cases WHERE year(date)>=2018 group by year(date)");
   if(isset($_POST['Submit'])){
     $year =$_POST['Year']; 
   }
+  $year1= str_replace("WHERE","AND",$year);
     //Chart 1
   $query1 = $conn->query("SELECT day, COUNT(case_id) as totalnumber FROM cases $year GROUP BY day ORDER BY dayofweek(date)");
 
@@ -49,6 +51,45 @@
     $barangay[] = $data4['barangay_name'];
     $totalnumber4[] = $data4['totalnumber4'];
   }
+
+  $query5 = $conn->query("SELECT classification_name, COUNT(crime_type_name) as totalnumber FROM cases WHERE crime_type_name = 'INDEX CRIME' $year1 GROUP BY classification_name ORDER BY COUNT(crime_type_name) DESC LIMIT 10;");
+  foreach($query5 as $data)
+   {
+       $index[] = $data['classification_name'];
+       $cases1[] = $data['totalnumber'];
+   }
+
+   $query6 = $conn->query("SELECT classification_name, COUNT(crime_type_name) as totalnumber FROM cases WHERE crime_type_name = 'NON-INDEX CRIME' $year1 GROUP BY classification_name ORDER BY COUNT(crime_type_name) DESC LIMIT 10;");
+   foreach($query6 as $data)
+    {
+        $nonindex[] = $data['classification_name'];
+        $cases2[] = $data['totalnumber'];
+    }
+  
+   $query7 = $conn->query("SELECT barangay_name, COUNT(case_id) as totalnumber6 FROM cases WHERE crime_type_name = 'INDEX CRIME' $year1 GROUP BY barangay_name ORDER BY COUNT(case_id) DESC LIMIT 5");
+ 
+   foreach($query7 as $data6)
+   {
+     $barangay6[] = $data6['barangay_name'];
+     $totalnumber6[] = $data6['totalnumber6'];
+   }
+  
+    $query8 = $conn->query("SELECT barangay_name, COUNT(case_id) as totalnumber7 FROM cases WHERE crime_type_name = 'NON-INDEX CRIME' $year1 GROUP BY barangay_name ORDER BY COUNT(case_id) DESC LIMIT 5");
+
+    foreach($query8 as $data7)
+    {
+        $barangay7[] = $data7['barangay_name'];
+        $totalnumber7[] = $data7['totalnumber7'];
+    }
+
+    $query8 = $conn->query("SELECT time as timename, count(case_id) as totalnumber8 from cases WHERE time between '6:00:00' AND '11:59:00' $year1 UNION SELECT time as timename, count(case_id) as totalnumber8 from cases WHERE time between '12:00:00' AND '17:59:00' $year1 UNION
+    SELECT time as timename, count(case_id) as totalnumber8 from cases WHERE time between '18:00:00' AND '23:59:00' $year1 UNION SELECT time as timename, count(case_id) as totalnumber8 from cases WHERE time between '00:00:00' AND '5:59:00' $year1");
+
+    foreach($query8 as $data8)
+    {
+        $timename[] = $data8['timename'];
+        $totalnumber8[] = $data8['totalnumber8'];
+    }
 ?>
 
 <!DOCTYPE html>
@@ -66,21 +107,18 @@
 </head>
 <?php include("header.php"); ?>
 <body>
+    <button class="btn btn-primary active col-1" type="button" style="margin-left: 3em;">Charts</button>
+<button class="btn btn-primary col-2" type="button" style="margin-left: 0.5em;" onclick="location.href ='barangay-heatmap';">Barangay Heatmap</button>
+<button class="btn btn-primary col-2" type="button" style="margin-left: 0.5em;" onclick="location.href ='monthly-crime-heatmap';">Monthly Crime Heatmap</button>
+     <h3 align="center">Dashboard</h3>
     <center><form method="POST">
-       <label><h4>Select Year<h4></label>
-       
         <select class="form-select mb-3" style="width:7em;" name="Year">
             <option value="" selected>All</option>
-            <?php 
-                while ($crimedata = mysqli_fetch_array($checkyear,MYSQLI_ASSOC)):; 
-            ?>
+            <?php while ($crimedata = mysqli_fetch_array($checkyear,MYSQLI_ASSOC)):; ?>
                 <option  value="WHERE year(date) like <?php echo $crimedata['year(date)'];?>">
                     <?php echo $crimedata['year(date)'];?>
                 </option>
-            <?php 
-                endwhile; 
-                // While loop must be terminated
-            ?>
+            <?php endwhile; ?>
         </select>
         <input class="btn btn-success btn-md" style="width:5em;" type="Submit" value="Submit" name="Submit">
     </form></center>
@@ -88,7 +126,7 @@
         <div class="row row-cols-1 row-cols-md-2 g-4">
             <div class="col">
                 <div class="card h-100" style="padding:0em;">
-                    <div class="card-header text-center"><h4>Crime Cases Each Day</h4></div>
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Crime Cases Each Day</h4></div>
                     <div class="card-body" style="padding:0; margin:1em">
                         <canvas id="Linegraph1" style="padding:0.25em;"></canvas>
                     </div>
@@ -96,7 +134,7 @@
             </div>
             <div class="col">
                 <div class="card h-100" style="padding:0em;">
-                    <div class="card-header text-center"><h4>Crime Cases Each Month</h4></div>
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Crime Cases Each Month</h4></div>
                     <div class="card-body" style="padding:0; margin:1em">
                         <canvas id="Linegraph2" style="padding:0.25em;"></canvas>
                     </div>
@@ -104,7 +142,7 @@
             </div>
             <div class="col">
                 <div class="card h-100" style="padding:0em;">
-                    <div class="card-header text-center"><h4>Top 5 Places of Occurence</h4></div>
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Top 5 Places of Occurence</h4></div>
                     <div class="card-body">
                         <canvas id="Piechart" style="padding:0.25em;"></canvas>
                     </div>
@@ -112,15 +150,15 @@
             </div>
             <div class="col">
                 <div class="card h-100" style="padding:0em;">
-                    <div class="card-header text-center"><h4>Top 5 Barangay with the Most Cases</h4></div>
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Time of the Day Most Crimes Committed</h4></div>
                     <div class="card-body" style="padding:0; margin:1em">
-                        <canvas id="Bargraph1" style="padding:0.25em;"></canvas>
+                        <canvas id="Piechart2" style="padding:0.25em;"></canvas>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card h-100" style="padding:0em;">
-                    <div class="card-header text-center"><h4>Top 5 Places of Occurence</h4></div>
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Top 10 Index Crimes</h4></div>
                     <div class="card-body">
                         <canvas id="Bargraph2" style="padding:0.25em;"></canvas>
                     </div>
@@ -128,9 +166,33 @@
             </div>
             <div class="col">
                 <div class="card h-100" style="padding:0em;">
-                    <div class="card-header text-center"><h4>Top 5 Barangay with the Most Cases</h4></div>
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Top 10 Non-Index Crimes</h4></div>
                     <div class="card-body" style="padding:0; margin:1em">
                         <canvas id="Bargraph3" style="padding:0.25em;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100" style="padding:0em;">
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Top 5 Barangays under Index Crimes</h4></div>
+                    <div class="card-body">
+                        <canvas id="Bargraph4" style="padding:0.25em;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100" style="padding:0em;">
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Top 5 Barangays under Non-Index Crimes</h4></div>
+                    <div class="card-body" style="padding:0; margin:1em">
+                        <canvas id="Bargraph5" style="padding:0.25em;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100" style="padding:0em;">
+                    <div class="card-header text-center"><h4 style="margin-bottom:0;">Top 5 Barangays with the Most Cases</h4></div>
+                    <div class="card-body">
+                        <canvas id="Bargraph1" style="padding:0.25em;"></canvas>
                     </div>
                 </div>
             </div>
@@ -220,11 +282,11 @@
                 datasets: [{
                     data: <?php echo json_encode($totalnumber3)?>,
                     backgroundColor: [
-                    'rgba(255, 80, 80, 0.6)',
-                    'rgba(229, 100, 100, 1)',
-                    'rgba(192, 55, 55, 1)',
-                    'rgba(118, 45, 45, 1)',
-                    'rgba(65, 0, 0, 1)'
+                    'rgba(255, 80, 80, 0.7)',
+                    'rgba(229, 100, 100, 0.7)',
+                    'rgba(192, 55, 55, 0.7)',
+                    'rgba(118, 45, 45, 0.7)',
+                    'rgba(65, 0, 0, 0.7)'
                     ],
                     borderColor: [
                     'rgba(238, 227, 227, 1)',
@@ -243,11 +305,7 @@
                 position: 'bottom',
             },
             title: {
-                display: true,
-            scales: {
-                y: {
-                }
-                }
+                display: true
             }
             },
         };
@@ -257,6 +315,48 @@
                 config21
             );
         </script>
+
+<script>
+  // === include 'setup' then 'config' above ===
+  
+  const data8 = {
+    labels: ['Morning','Afternoon','Evening','Midnight'],
+    datasets: [{
+      
+      data: <?php echo json_encode($totalnumber8) ?>,
+      backgroundColor: [
+                    'rgba(255, 80, 80, 0.7)',
+                    'rgba(229, 100, 100, 0.7)',
+                    'rgba(192, 55, 55, 0.7)',
+                    'rgba(118, 45, 45, 0.7)',
+                    'rgba(65, 0, 0, 0.7)'
+                    ],
+                    borderColor: [
+                    'rgba(238, 227, 227, 1)',
+                    ],
+                    borderWidth: 1
+    }]
+  };
+
+  const config8 = {
+    type: 'pie',
+    data: data8,
+    options: {
+    legend: {
+        display: true,
+        position: 'bottom',
+        },
+      title: {
+        display: true
+      }
+    },
+  };
+
+  var myChart7 = new Chart(
+    document.getElementById('Piechart2'),
+    config8
+  );
+</script>
 
         <script>
             const barangaylabels = <?php echo json_encode($barangay)?>;
@@ -302,6 +402,313 @@
                 config1
             );
         </script>
+
+<script>
+    const indexlabels = <?php echo json_encode($index)?>;
+    const data2 = {
+        labels: indexlabels,
+        datasets: [{
+            label: "Number of Index Crimes",
+            data: <?php echo json_encode($cases1)?>,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)'
+            ],
+            borderWidth: 1
+          }]
+        };
+
+    const config2 = {
+    type: 'horizontalBar',
+    data: data2,
+    options:{
+      title: {
+        display: true,
+      scales: {
+        y:{
+        }
+        }
+      }
+    },
+  };
+
+  const Bargraph2 = new Chart(
+        document.getElementById('Bargraph2'),
+        config2
+    );
+</script>
+
+<script>
+    const nonindexlabels = <?php echo json_encode($nonindex)?>;
+    const data3 = {
+        labels: nonindexlabels,
+        datasets: [{
+            label: "Number of Non-Index Crimes",
+            data: <?php echo json_encode($cases2)?>,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)'
+            ],
+            borderWidth: 1
+          }]
+        };
+
+    const config3 = {
+    type: 'horizontalBar',
+    data: data3,
+    options: {
+      title: {
+        display: true,
+      scales: {
+        y: {
+        }
+        }
+      }
+    },
+  };
+
+  const Bargraph3 = new Chart(
+        document.getElementById('Bargraph3'),
+        config3
+    );
+</script>
+
+<script>
+    const indexlabels = <?php echo json_encode($index)?>;
+    const data2 = {
+        labels: indexlabels,
+        datasets: [{
+            label: "Number of Index Crimes",
+            data: <?php echo json_encode($cases1)?>,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)'
+            ],
+            borderWidth: 1
+          }]
+        };
+
+    const config2 = {
+    type: 'horizontalBar',
+    data: data2,
+    options:{
+      title: {
+        display: true,
+      scales: {
+        y:{
+        }
+        }
+      }
+    },
+  };
+
+  const Bargraph2 = new Chart(
+        document.getElementById('Bargraph2'),
+        config2
+    );
+</script>
+
+<script>
+    const nonindexlabels = <?php echo json_encode($nonindex)?>;
+    const data3 = {
+        labels: nonindexlabels,
+        datasets: [{
+            label: "Number of Non-Index Crimes",
+            data: <?php echo json_encode($cases2)?>,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)'
+            ],
+            borderWidth: 1
+          }]
+        };
+
+    const config3 = {
+    type: 'horizontalBar',
+    data: data3,
+    options: {
+      title: {
+        display: true,
+      scales: {
+        y: {
+        }
+        }
+      }
+    },
+  };
+
+  const Bargraph3 = new Chart(
+        document.getElementById('Bargraph3'),
+        config3
+    );
+</script>
+
+<script>
+  // === include 'setup' then 'config' above ===
+  const barangaylabels6 = <?php echo json_encode($barangay6) ?>;
+  const data6 = {
+    labels: barangaylabels6,
+    datasets: [{
+      label: 'Number of Crime Cases',
+      data: <?php echo json_encode($totalnumber6) ?>,
+      backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  const config5 = {
+    type: 'horizontalBar',
+    data: data6,
+    options: {
+      title: {
+        display: true
+      }
+    },
+  };
+
+  var myChart5 = new Chart(
+    document.getElementById('Bargraph4'),
+    config5
+  );
+</script>
+
+<script>
+  // === include 'setup' then 'config' above ===
+  const barangaylabels7 = <?php echo json_encode($barangay7) ?>;
+  const data7 = {
+    labels: barangaylabels7,
+    datasets: [{
+      label: 'Number of Crime Cases',
+      data: <?php echo json_encode($totalnumber7) ?>,
+      backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)',
+              'rgb(255, 99, 132)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  const config6 = {
+    type: 'horizontalBar',
+    data: data7,
+    options: {
+      title: {
+        display: true
+      }
+    },
+  };
+
+  var myChart6 = new Chart(
+    document.getElementById('Bargraph5'),
+    config6
+  );
+</script>
+
 
 <br><br><br>
 </body>

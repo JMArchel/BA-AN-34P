@@ -6,7 +6,7 @@ $id=$_GET["id"];
 session_start();
 $user_id= $_SESSION["user_id"];
 
-mysqli_query($conn, "UPDATE `user` SET `approve_reject_timestamp`=CURRENT_TIMESTAMP,`supervisor_accept_reject`='$user_id',`approval`='1' WHERE `user_id`= $id ");
+mysqli_query($conn, "UPDATE `user` SET `approve_reject_timestamp`=CONVERT_TZ(CURRENT_TIMESTAMP,'+00:00','+08:00'),`supervisor_accept_reject`='$user_id',`approval`='1' WHERE `user_id`= $id ");
 
 $res=mysqli_query($conn,"SELECT `user_id`, `email`, `first_name`, `last_name`, `position` FROM `user` WHERE `user_id`=$id");
 

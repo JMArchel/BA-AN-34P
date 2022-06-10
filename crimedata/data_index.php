@@ -137,10 +137,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<th>#</th>  
 						<th>Date</th>
 						<th>Day</th>
-						<th>time</th>
+						<th>Time</th>
 						<th>Barangay</th>
-						<th>X</th>
-						<th>Y</th>
+						<th>X-axis</th>
+						<th>Y-axis</th>
 						<th>Crime_type</th>
 						<th>Category</th>
 						<th>Classification</th>
@@ -149,7 +149,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<th>Clear</th>
 						<th>Occurence</th>
 						<th>Username</th>
-						<th>Created</th>
+						<th>Imported</th>
 					</tr>
 				</tfoot>
 			</table>

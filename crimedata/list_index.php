@@ -30,7 +30,7 @@ include_once("connection.php");
 <?php include("header.php"); ?>
 <body>
     <h3 align="center">List Collection</h3>
-  <center><button class="btn btn-success btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">LIst Tab</button></center>
+  <center><h5><button class="btn btn-success col-lg-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">List Tab</button></h5></center>
 
   <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="background-color:#0F3465;">
     <div class="offcanvas-header">

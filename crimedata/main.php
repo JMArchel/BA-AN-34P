@@ -58,25 +58,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 							<div class="row">
 								<div class="col-md-4 mb-3">
 									<div class="card">
-										<img class="img-fluid" src="img/main-01.png">
-									</div>
-								</div>
-								<div class="col-md-4 mb-3">
-									<div class="card">
-										<img class="img-fluid" src="img/main-02.png">
-									</div>
-								</div>
-								<div class="col-md-4 mb-3">
-									<div class="card">
-										<img class="img-fluid" src="img/main-03.png">
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="carousel-item">
-							<div class="row">
-								<div class="col-md-4 mb-3">
-									<div class="card">
 										<img class="img-fluid" src="img/main-04.png">
 									</div>
 								</div>
@@ -88,6 +69,25 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 								<div class="col-md-4 mb-3">
 									<div class="card">
 										<img class="img-fluid" src="img/main-06.png">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="carousel-item">
+							<div class="row">
+								<div class="col-md-4 mb-3">
+									<div class="card">
+										<img class="img-fluid" src="img/main-01.png">
+									</div>
+								</div>
+								<div class="col-md-4 mb-3">
+									<div class="card">
+										<img class="img-fluid" src="img/main-02.png">
+									</div>
+								</div>
+								<div class="col-md-4 mb-3">
+									<div class="card">
+										<img class="img-fluid" src="img/main-03.png">
 									</div>
 								</div>
 							</div>

@@ -14,8 +14,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     
 $subject="Inquiry";
-$to = "inquiry@crimedata.mydatamarker.com";
+$to = "inquiry@crimedata.mydatamarker.com, josemariagfelisilda@su.edu.ph, danielaugeslani@su.edu.ph, shekinahtandres@su.edu.ph, derrickamil@su.edu.ph, nikkavserilo@su.edu.ph, euniceglituanas@su.edu.ph ";
 $header= "From:".$name."<".$email.">\r\n";
+
 
 mail($to,$subject,$txt,$header)
 or die("Error");
@@ -161,17 +162,19 @@ or die("Error");
             <div class="row g-0">
                 <div class="card-header text-center"><h4 style="color:#ED3030; margin-bottom:0em;"><i class="bi bi-people-fill"></i> Creators of the Project</h4></div>
                 <div class="col-md-5">
-                    <img src="img/friends.jpg" class="img-fluid rounded-start" alt="...">
+                    <img src="img/friends.png" class="img-fluid rounded-start" alt="...">
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
                         <p class="card-text">
-                            · <b>ANDRES</b>, Shekinah<br>
-                            · <b>AMIL</b>, Derrick Thomas<br>
-                            · <b>FELISILDA</b>, Josemaria Archel<br>
-                            · <b>GESLANI</b>, Daniela<br>
+
                             · <b>LITUANAS</b>, Eunice Mel<br>
+                            · <b>ANDRES</b>, Shekinah<br>
+                            · <b>FELISILDA</b>, Josemaria Archel<br>
+                            · <b>AMIL</b>, Derrick Thomas<br>
+                            · <b>GESLANI</b>, Daniela<br>
                             · <b>SERILO</b>, Nikka Marae Leonore</p>
+                            <p>from left to right</p>
                     </div>
                 </div>
             </div>
@@ -179,7 +182,7 @@ or die("Error");
     </div>
 
 
-    <div class="row foot" style="padding:20px 50px 0px 30px">
+    <div class="row foot" style="padding:20px 50px 0px 30px; height: 18em;">
         <div class="col-lg-8">
 			<h3><img src='img/logo5.svg' alt="logo" style="width: 300px;"></h3>
 			<h5 style="padding-top:10px; font-size: 15px;">· Time · Day · Barangay · Crime · Occurence · Contact ·</h5>
